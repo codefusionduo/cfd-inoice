@@ -86,7 +86,7 @@ const App: React.FC = () => {
     } catch (err) {
       console.error(err);
       setAppState(AppState.ERROR);
-      setErrorMsg(err instanceof Error ? err.message : "Failed to process document.");
+      setErrorMsg(err instanceof Error ? err.message : "Failed to process document. Please check your internet connection or API key.");
     }
   };
 

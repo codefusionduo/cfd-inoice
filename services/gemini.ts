@@ -45,7 +45,8 @@ const billSchema: any = {
 };
 
 export const scanDocument = async (base64Data: string, mimeType: string): Promise<ExtractedBillData> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Use strictly injected process.env.API_KEY
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
 
   try {
     const response = await ai.models.generateContent({
@@ -59,7 +60,7 @@ export const scanDocument = async (base64Data: string, mimeType: string): Promis
             }
           },
           {
-            text: "Extract document details as JSON."
+            text: "Identify this document (Invoice, Lorry Receipt, etc.) and extract all data including sender, receiver, items table, and totals into structured JSON."
           }
         ]
       },
@@ -71,12 +72,12 @@ export const scanDocument = async (base64Data: string, mimeType: string): Promis
 
     const text = response.text;
     if (!text) {
-      throw new Error("Extraction failed: No data returned.");
+      throw new Error("Gemini returned an empty response.");
     }
 
     return JSON.parse(text) as ExtractedBillData;
   } catch (error) {
-    console.error("Gemini Error:", error);
+    console.error("Gemini AI Scan Error:", error);
     throw error;
   }
 };
