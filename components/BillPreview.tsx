@@ -8,6 +8,12 @@ interface BillPreviewProps {
 }
 
 export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
+  const handlePrint = () => {
+    // Attempting to use window.print(). In some restricted environments like iframes, 
+    // it might be blocked. Using a direct call.
+    window.print();
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden border border-gray-200 animate-fade-in print:shadow-none print:border-none">
       {/* Action Bar - Hidden during print */}
@@ -17,17 +23,26 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
           <span className="text-sm font-bold tracking-wider">CFD INVOICE VIEWER</span>
         </div>
         <div className="flex gap-3">
-            <button onClick={() => window.print()} className="flex items-center gap-2 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded text-sm transition-colors">
-            <Printer size={16} /> Print Bill
+          <button 
+            type="button"
+            onClick={handlePrint} 
+            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 border border-indigo-400/30 hover:bg-indigo-500/20 text-indigo-100 rounded text-sm font-medium transition-all active:scale-95"
+          >
+            <Printer size={16} /> 
+            <span>Print Bill</span>
           </button>
-          <button onClick={onReset} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 rounded text-sm font-medium transition-colors">
+          <button 
+            type="button"
+            onClick={onReset} 
+            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+          >
             New Scan
           </button>
         </div>
       </div>
 
       {/* Bill Content */}
-      <div className="p-8 md:p-12 print:p-4">
+      <div className="p-8 md:p-12 print:p-4 bg-white">
         
         {/* Top Branding - This will appear on the printed bill */}
         <div className="flex items-center justify-between mb-10 border-b-4 border-indigo-600 pb-6">
@@ -166,6 +181,8 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
           .print\\:shadow-none { box-shadow: none !important; }
           .print\\:border-none { border: none !important; }
           .print\\:p-4 { padding: 1rem !important; }
+          /* Ensure colors are printed */
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         }
       `}</style>
     </div>
