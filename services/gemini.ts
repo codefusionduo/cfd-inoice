@@ -1,7 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ExtractedBillData } from "../types.ts";
 
-// Define the schema as a plain object to avoid potential SDK version mismatches
 const billSchema: any = {
   type: Type.OBJECT,
   properties: {
@@ -46,10 +45,6 @@ const billSchema: any = {
 };
 
 export const scanDocument = async (base64Data: string, mimeType: string): Promise<ExtractedBillData> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing. Please check your environment variables.");
-  }
-
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   try {
@@ -64,26 +59,24 @@ export const scanDocument = async (base64Data: string, mimeType: string): Promis
             }
           },
           {
-            text: `Analyze this document and extract its data into structured JSON matching the provided schema.`
+            text: "Extract document details as JSON."
           }
         ]
       },
       config: {
         responseMimeType: "application/json",
         responseSchema: billSchema,
-        temperature: 0.1
       }
     });
 
     const text = response.text;
     if (!text) {
-      throw new Error("No data returned from Gemini.");
+      throw new Error("Extraction failed: No data returned.");
     }
 
     return JSON.parse(text) as ExtractedBillData;
-
   } catch (error) {
-    console.error("Gemini Scan Error:", error);
+    console.error("Gemini Error:", error);
     throw error;
   }
 };
