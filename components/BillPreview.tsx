@@ -9,8 +9,8 @@ interface BillPreviewProps {
 
 export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
   const handlePrint = () => {
-    // Attempting to use window.print(). In some restricted environments like iframes, 
-    // it might be blocked. Using a direct call.
+    // Basic standard print command. 
+    // Works in all modern browsers unless explicitly blocked by a sandbox.
     window.print();
   };
 
@@ -26,7 +26,7 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
           <button 
             type="button"
             onClick={handlePrint} 
-            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 border border-indigo-400/30 hover:bg-indigo-500/20 text-indigo-100 rounded text-sm font-medium transition-all active:scale-95"
+            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 border border-indigo-400/30 hover:bg-indigo-500/20 text-indigo-100 rounded text-sm font-medium transition-all active:scale-95 cursor-pointer"
           >
             <Printer size={16} /> 
             <span>Print Bill</span>
@@ -34,7 +34,7 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
           <button 
             type="button"
             onClick={onReset} 
-            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+            className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-sm font-bold transition-all shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer"
           >
             New Scan
           </button>
