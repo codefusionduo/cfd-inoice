@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { UploadZone } from './components/UploadZone';
-import { BillPreview } from './components/BillPreview';
-import { scanDocument } from './services/gemini';
-import { AppState, ExtractedBillData, HistoryItem } from './types';
+import { UploadZone } from './components/UploadZone.tsx';
+import { BillPreview } from './components/BillPreview.tsx';
+import { scanDocument } from './services/gemini.ts';
+import { AppState, ExtractedBillData, HistoryItem } from './types.ts';
 import { Scan, Loader2, FileCheck, AlertCircle, FileText, History, Trash2, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {

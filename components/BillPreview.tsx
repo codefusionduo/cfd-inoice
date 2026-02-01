@@ -1,5 +1,5 @@
 import React from 'react';
-import { ExtractedBillData } from '../types';
+import { ExtractedBillData } from '../types.ts';
 import { Printer, Scan } from 'lucide-react';
 
 interface BillPreviewProps {
@@ -9,9 +9,15 @@ interface BillPreviewProps {
 
 export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
   const handlePrint = () => {
-    // Basic standard print command. 
-    // Works in all modern browsers unless explicitly blocked by a sandbox.
-    window.print();
+    try {
+      // Basic standard print command. 
+      // If we are in an iframe (like the development environment), 
+      // print might be blocked or restricted.
+      window.print();
+    } catch (e) {
+      console.error("Print command failed", e);
+      alert("Print failed. Your browser might be blocking print from this window.");
+    }
   };
 
   return (
