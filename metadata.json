@@ -1,0 +1,5 @@
+{
+  "name": "CFD Invoice",
+  "description": "Intelligent document scanner that extracts data from logistics bills and invoices using Gemini AI to generate structured CFD Invoices.",
+  "requestFramePermissions": []
+}
