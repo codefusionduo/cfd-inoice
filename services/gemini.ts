@@ -1,8 +1,8 @@
-import { GoogleGenAI, Type, Schema } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import { ExtractedBillData } from "../types";
 
-// Define the schema for the extraction
-const billSchema: Schema = {
+// Define the schema as a plain object to avoid potential SDK version mismatches
+const billSchema: any = {
   type: Type.OBJECT,
   properties: {
     documentType: { type: Type.STRING, description: "Type of document (e.g., Invoice, Lorry Receipt, E-Way Bill)" },
@@ -54,7 +54,7 @@ export const scanDocument = async (base64Data: string, mimeType: string): Promis
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview', // Updated to valid Gemini 3 model
+      model: 'gemini-3-flash-preview',
       contents: {
         parts: [
           {
@@ -64,18 +64,14 @@ export const scanDocument = async (base64Data: string, mimeType: string): Promis
             }
           },
           {
-            text: `Analyze this document carefully. It is likely a logistics document, invoice, or bill (like a Lorry Receipt or Tax Invoice). 
-            Extract the data into a structured JSON format matching the schema. 
-            Ensure numerical values like totals and tax are accurately captured. 
-            If a field is missing, use an empty string. 
-            Translate any implicit visual tables into the 'items' array.`
+            text: `Analyze this document and extract its data into structured JSON matching the provided schema.`
           }
         ]
       },
       config: {
         responseMimeType: "application/json",
         responseSchema: billSchema,
-        temperature: 0.1 // Low temperature for higher factual accuracy
+        temperature: 0.1
       }
     });
 

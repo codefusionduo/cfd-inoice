@@ -3,7 +3,7 @@ import { UploadZone } from './components/UploadZone';
 import { BillPreview } from './components/BillPreview';
 import { scanDocument } from './services/gemini';
 import { AppState, ExtractedBillData, HistoryItem } from './types';
-import { Scan, Loader2, FileCheck, AlertCircle, FileText, History, Trash2, ChevronRight, X } from 'lucide-react';
+import { Scan, Loader2, FileCheck, AlertCircle, FileText, History, Trash2, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.IDLE);
@@ -12,6 +12,16 @@ const App: React.FC = () => {
   const [billData, setBillData] = useState<ExtractedBillData | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
+
+  // Safe ID generator fallback
+  const generateId = () => {
+    try {
+      if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+    } catch (e) {}
+    return Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+  };
 
   // Load history from local storage on mount
   useEffect(() => {
@@ -27,7 +37,7 @@ const App: React.FC = () => {
 
   const saveToHistory = (data: ExtractedBillData) => {
     const newItem: HistoryItem = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       timestamp: Date.now(),
       data: data
     };
