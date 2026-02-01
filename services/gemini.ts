@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { ExtractedBillData } from "../types";
+import { ExtractedBillData } from "../types.ts";
 
 // Define the schema as a plain object to avoid potential SDK version mismatches
 const billSchema: any = {
