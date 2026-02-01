@@ -1,6 +1,6 @@
 import React from 'react';
 import { ExtractedBillData } from '../types.ts';
-import { Printer, Scan } from 'lucide-react';
+import { Printer, ReceiptText } from 'lucide-react';
 
 interface BillPreviewProps {
   data: ExtractedBillData;
@@ -24,8 +24,10 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
     <div className="w-full max-w-4xl mx-auto bg-white shadow-2xl rounded-lg overflow-hidden border border-gray-200 animate-fade-in print:shadow-none print:border-none">
       {/* Action Bar - Hidden during print */}
       <div className="bg-gray-800 text-white p-4 flex justify-between items-center no-print print:hidden">
-        <div className="flex items-center gap-2">
-          <Scan size={18} className="text-indigo-400" />
+        <div className="flex items-center gap-3">
+          <div className="bg-indigo-500/20 p-1.5 rounded-lg border border-indigo-500/30">
+            <ReceiptText size={16} className="text-indigo-400" />
+          </div>
           <span className="text-sm font-bold tracking-wider">CFD INVOICE VIEWER</span>
         </div>
         <div className="flex gap-3">
@@ -52,18 +54,18 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
         
         {/* Top Branding - This will appear on the printed bill */}
         <div className="flex items-center justify-between mb-10 border-b-4 border-indigo-600 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-indigo-600 p-2.5 rounded-xl shadow-lg print:shadow-none">
-              <Scan className="w-8 h-8 text-white" />
+          <div className="flex items-center gap-4">
+            <div className="bg-indigo-600 p-3 rounded-2xl shadow-xl print:shadow-none">
+              <ReceiptText className="w-8 h-8 text-white" />
             </div>
             <div>
-              <div className="text-2xl font-black text-gray-900 tracking-tighter uppercase leading-none">CFD Invoice</div>
-              <div className="text-[10px] font-bold text-indigo-600 tracking-[0.2em] uppercase mt-1">Intelligent Extraction</div>
+              <div className="text-3xl font-black text-gray-900 tracking-tighter uppercase leading-none">CFD Invoice</div>
+              <div className="text-[10px] font-black text-indigo-600 tracking-[0.3em] uppercase mt-2">Intelligent AI Extraction</div>
             </div>
           </div>
           <div className="text-right">
             <h1 className="text-4xl font-black text-gray-900 uppercase tracking-tight leading-none">{data.documentType || 'INVOICE'}</h1>
-            <p className="text-xs font-medium text-gray-400 mt-2 uppercase tracking-widest">Digital Copy</p>
+            <p className="text-xs font-bold text-gray-400 mt-2 uppercase tracking-widest">Extracted Digital Copy</p>
           </div>
         </div>
 
@@ -172,7 +174,7 @@ export const BillPreview: React.FC<BillPreviewProps> = ({ data, onReset }) => {
         <div className="mt-16 flex flex-col items-center gap-4 text-center">
           <div className="w-24 h-1 bg-indigo-100 rounded-full"></div>
           <div className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">
-            Processed Digitally by <span className="text-indigo-600 opacity-60">CFD Invoice AI</span>
+            Processed Digitally by <span className="text-indigo-600 font-black">CFD Invoice AI</span>
           </div>
           <p className="text-[9px] text-gray-300 font-medium">
             System ID: {Math.random().toString(36).substring(2, 10).toUpperCase()} • Timestamp: {new Date().toLocaleString()}

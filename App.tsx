@@ -3,7 +3,7 @@ import { UploadZone } from './components/UploadZone.tsx';
 import { BillPreview } from './components/BillPreview.tsx';
 import { scanDocument } from './services/gemini.ts';
 import { AppState, ExtractedBillData, HistoryItem } from './types.ts';
-import { Scan, Loader2, FileCheck, AlertCircle, FileText, History, Trash2, ChevronRight } from 'lucide-react';
+import { ReceiptText, Loader2, FileCheck, AlertCircle, FileText, History, Trash2, ChevronRight } from 'lucide-react';
 
 const App: React.FC = () => {
   const [appState, setAppState] = useState<AppState>(AppState.IDLE);
@@ -106,31 +106,34 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen pb-20 bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-20">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div 
-              className="flex items-center gap-2 cursor-pointer" 
+              className="flex items-center gap-3 cursor-pointer group" 
               onClick={handleReset}
             >
-              <div className="bg-indigo-600 p-2 rounded-lg">
-                <Scan className="w-5 h-5 text-white" />
+              <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
+                <ReceiptText className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-gray-900 tracking-tight">CFD Invoice</span>
+              <div className="flex flex-col leading-tight">
+                <span className="text-xl font-black text-indigo-600 tracking-tighter">CFD</span>
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Invoice AI</span>
+              </div>
             </div>
 
             <button 
               onClick={() => setAppState(appState === AppState.HISTORY ? AppState.IDLE : AppState.HISTORY)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${
                 appState === AppState.HISTORY 
-                ? 'bg-indigo-600 text-white' 
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
                 : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
               <History size={18} />
-              <span className="font-medium hidden sm:inline">History</span>
+              <span className="font-semibold hidden sm:inline">Activity</span>
               {history.length > 0 && (
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+                <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
                   appState === AppState.HISTORY ? 'bg-white text-indigo-600' : 'bg-indigo-100 text-indigo-600'
                 }`}>
                   {history.length}
@@ -166,13 +169,13 @@ const App: React.FC = () => {
                 <div className="bg-gray-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText className="text-gray-300" size={32} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">No history yet</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-1">No activity yet</h3>
                 <p className="text-gray-500 mb-6">Scanned invoices will appear here for quick access.</p>
                 <button 
                   onClick={handleReset}
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-bold"
                 >
-                  Start Scanning
+                  Start New Scan
                 </button>
               </div>
             ) : (
@@ -185,7 +188,7 @@ const App: React.FC = () => {
                   >
                     <div className="flex items-center gap-4">
                       <div className="bg-indigo-50 p-3 rounded-lg text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                        <FileText size={24} />
+                        <ReceiptText size={24} />
                       </div>
                       <div>
                         <div className="font-bold text-gray-900 truncate max-w-[200px] sm:max-w-xs">
@@ -254,7 +257,7 @@ const App: React.FC = () => {
                 </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Analyzing Document...</h2>
-            <p className="text-gray-500 mb-6">Using Gemini AI to extract billing details.</p>
+            <p className="text-gray-500 mb-6 font-medium">Using Gemini AI to extract billing details.</p>
             <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
           </div>
         )}
@@ -262,9 +265,9 @@ const App: React.FC = () => {
         {/* State: SUCCESS */}
         {appState === AppState.SUCCESS && billData && (
           <div className="animate-fade-in">
-             <div className="flex items-center justify-center gap-2 mb-8 text-green-600 bg-green-50 w-fit mx-auto px-4 py-2 rounded-full border border-green-100">
+             <div className="flex items-center justify-center gap-2 mb-8 text-green-600 bg-green-50 w-fit mx-auto px-4 py-2 rounded-full border border-green-100 shadow-sm">
                 <FileCheck size={18} />
-                <span className="font-semibold text-sm">Extraction Successful</span>
+                <span className="font-bold text-sm tracking-tight">Extraction Successful</span>
              </div>
              <BillPreview data={billData} onReset={handleReset} />
           </div>
@@ -273,11 +276,11 @@ const App: React.FC = () => {
         {/* State: ERROR */}
         {appState === AppState.ERROR && (
           <div className="max-w-md mx-auto text-center py-12 animate-fade-in">
-            <div className="bg-red-50 p-4 rounded-full inline-flex mb-4">
+            <div className="bg-red-50 p-4 rounded-full inline-flex mb-4 shadow-sm">
                 <AlertCircle className="w-10 h-10 text-red-600" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Scan Failed</h3>
-            <p className="text-gray-600 mb-6">{errorMsg}</p>
+            <p className="text-gray-600 mb-6 font-medium">{errorMsg}</p>
             <button 
                 onClick={handleReset}
                 className="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-all shadow-lg active:scale-95"
